@@ -1,4 +1,4 @@
-# Glitching STM32F103 with an iCE40 FPGA
+# Glitching STM32F103 with an iCE40 'iCEstick' FPGA
 
 **FULL WRITEUP TO FOLLOW!!**
 
