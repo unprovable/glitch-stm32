@@ -1,23 +1,39 @@
 /*
- * Copyright 2015 Forest Crossman
+ * This code is mostly mine - some of it was adapted from here: 
+  * https://github.com/deanjerkovich/avr-glitch-101
+ * 
+ * But the concept now is different - we want controllable glitches, 
+ * that we can drive through, say, and python script using PySerial. 
+ * This means that we take a value, and then use that (multiplied by 
+ * 512) as our glitch time value 
+ * 
+ * So, yeah - most of this is written/hacked together by me on a Sunday
+ * afternoon... 
+ * Released under MIT License: 
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining 
+ * a copy of this software and associated documentation files (the 
+ * "Software"), to deal in the Software without restriction, including 
+ * without limitation the rights to use, copy, modify, merge, publish, 
+ * distribute, sublicense, and/or sell copies of the Software, and to 
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
  *
  */
 
 `include "cores/osdvu/uart.v"
 `include "pll-72.v"
 
+
+// These I set and then didn't really use... 
+// I've left them here as example artefacts in case someone wants
+// to use them in some re-implementation... just reference them 
+// including a preceeding backtick... e.g.
+// if (counter == `WAIT_TIME) begin...
+// as a quick example line. :-P
 `define GLITCH_DURATION 26000
 `define GLITCH_MULTIPLIER 100
 `define WAIT_TIME       72000000
@@ -36,7 +52,6 @@ module top(
 	);
     
     assign LED0 = outreg;
-    //assign LED1 = ~outreg;
     assign LED1 = ~outreg;
     assign J1_1 = outreg;
     
@@ -68,7 +83,7 @@ module top(
 	assign {LED3, LED2} = rx_byte[7:6];
 
 	uart #(
-		.baud_rate(9600),                 // The baud rate in kilobits/s
+		.baud_rate(115200),                 // The baud rate in kilobits/s
 		.sys_clk_freq(12000000)           // The master clock frequency
 	)
 	uart0(
@@ -101,8 +116,9 @@ module top(
     end
 	always @(posedge iCE_CLK) begin
         // dirty reset of glitch signal if it is set - saves on
-        // waiting for UART to change mode NB - our other clock is a lot
-        // faster, so will certainly see this signal
+        // waiting for UART to change mode 
+        // NB - our other clock is a lot faster, so will certainly 
+        // see this signal most of the time #DirtyHax
         if (glitch_signal) begin
             glitch_signal <= 0;
         end
@@ -126,7 +142,10 @@ module top(
         // check if glitch_signal is on, and if yes,
         // reset counter and set glitch flag
         if (glitch_signal && !glitch) begin
-            // turns out we don't know the interface register uart_var1...
+            // turns out we don't know the interface register 
+            // uart_var1... take rx_byte and multiply it by 512 - this 
+            // gives us roughly +7 microsecond increase in glitch time 
+            // for every +1 increase in UART byte value... ish...
             var1 <= rx_byte << 8;
             glitch <= 1;
             counter <= 0;
