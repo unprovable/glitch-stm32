@@ -27,7 +27,12 @@
  *
  */
 
+// this was taken from this nice little repo:
+// https://github.com/cyrozap/iCEstick-UART-Demo
+// full props to cyrozap!
 `include "cores/osdvu/uart.v"
+// this is the code to get the clock from 12MHz to 72MHz
+// this was generated using icepll from the amazing icestorm repo!
 `include "pll-72.v"
 
 
