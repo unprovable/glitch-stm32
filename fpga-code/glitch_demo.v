@@ -5,7 +5,7 @@
  * But the concept now is different - we want controllable glitches, 
  * that we can drive through, say, and python script using PySerial. 
  * This means that we take a value, and then use that (multiplied by 
- * 512) as our glitch time value 
+ * 256) as our glitch time value 
  * 
  * So, yeah - most of this is written/hacked together by me on a Sunday
  * afternoon... 
@@ -151,7 +151,7 @@ module top(
         // reset counter and set glitch flag
         if (glitch_signal && !glitch) begin
             // turns out we don't know the interface register 
-            // uart_var1... take rx_byte and multiply it by 512 - this 
+            // uart_var1... take rx_byte and multiply it by 256 - this 
             // gives us roughly +7 microsecond increase in glitch time 
             // for every +1 increase in UART byte value... ish...
             var1 <= rx_byte << 8;
