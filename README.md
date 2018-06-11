@@ -1,5 +1,7 @@
 # Glitching STM32F103 with an iCE40 FPGA
 
+**FULL WRITEUP TO FOLLOW!!**
+
 `sudo /usr/local/bin/openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg`
 
 
