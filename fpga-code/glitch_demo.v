@@ -152,7 +152,7 @@ module top(
         if (glitch_signal && !glitch) begin
             // turns out we don't know the interface register 
             // uart_var1... take rx_byte and multiply it by 256 - this 
-            // gives us roughly +7 microsecond increase in glitch time 
+            // gives us roughly +3.5 microsecond increase in glitch time 
             // for every +1 increase in UART byte value... ish...
             var1 <= rx_byte << 8;
             glitch <= 1;
