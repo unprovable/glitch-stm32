@@ -9,8 +9,10 @@
  * 
  * So, yeah - most of this is written/hacked together by me on a Sunday
  * afternoon... 
+ * -- Mark C. (@LargeCardinal)
  * 
- * Released under MIT License: 
+ * Released under MIT License: (except the bits that aren't mine, like
+ * the UART thing... not sure what license that is...)
  * 
  * Permission is hereby granted, free of charge, to any person obtaining 
  * a copy of this software and associated documentation files (the 
